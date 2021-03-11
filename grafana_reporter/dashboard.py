@@ -81,7 +81,7 @@ class Dashboard:
             css_output = template_css.render({'dashboard': self})
             with open(path + '/' + 'report.css', 'wb') as f_css:
                 f_css.write(css_output.encode('utf-8'))
-            shutil.copyfile(js_template_path, path + '/report.js')
+            shutil.copyfile(template_path + '/' + js_template_path, path + '/report.js')
 
     def _render_and_write_panel_image(self, connector, path, panel_tuple):
         """
@@ -90,9 +90,9 @@ class Dashboard:
         :param path: Path to which the image is written.
         :param panel_tuple: A tuple made of the id of the panel, and a Panel object.
         """
-        panel_id, panel = panel_tuple
+        panel = panel_tuple[1]
         if panel.type != 'row':
-            image_path = path + '/' + panel.get_filename_image
+            image_path = path + '/' + panel.get_filename_image()
             with open(image_path, 'wb') as f_img:
                 f_img.write(panel.render_image(self.from_date, self.to_date, self.uid, connector))
 
@@ -102,7 +102,7 @@ class Dashboard:
         :param connector: A connector object to request the Grafana instance's API.
         :param panel_tuple: A tuple made of the id of the panel, and a Panel object.
         """
-        panel_id, panel = panel_tuple
+        panel = panel_tuple[1]
         if panel.type != 'row':
             return panel.id, panel.render_image_b64(self.from_date, self.to_date, self.uid, connector)
 
