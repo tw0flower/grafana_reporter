@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ dashboard.title }}</title>
+    {% if is_base64 %}
+    <style>
+        {% include css_template_path %}
+    </style>
+    {% else %}
+    <link rel="stylesheet" href="report.css">
+    {% endif %}
+</head>
+<body>
+<div>
+    <h1>{{ dashboard.title }}</h1>
+
+    <div id="grid">
+        {% set ns = namespace(first_run=true) %}
+        {% for i,p in dashboard.panels.items() %}
+            {% if p.type == 'row' %}
+                {% if not ns.first_run %}
+        </div>
+                {% endif %}
+
+        <button type="button" class="title collapsible">{{ p.title }}</button>
+        <div class="row-content">
+        {% else %}
+        <div id="_{{ p.id }}">
+            <div id="panel-body">
+            <h3>{{ p.title }}</h3>
+            {% if is_base64 %}
+                <img src="data:image/png;base64, {{ dict_b64[p.id].decode('ascii') }}"/>
+            {% else %}
+                <img src={{ p.get_filename_image() }}>
+            {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% set ns.first_run = false %}
+        {% endfor %}
+        </div>
+    </div>
+    {% if is_base64 %}
+    <script>
+        {% include js_template_path %}
+    </script>
+
+    {% else %}
+    <script src="report.js"></script>
+    {% endif %}
+</body>
+</html>

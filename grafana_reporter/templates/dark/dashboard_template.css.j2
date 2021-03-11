@@ -1,0 +1,19 @@
+{% include "common/dashboard_template.css.j2" %}
+
+body {
+    color: #FFFFFF;
+    background-color: #141619;
+}
+
+.title {
+    background-color: #1d4289;
+    color: #FFFFFF;
+}
+
+{% for i,p in dashboard.panels.items() %}
+    {% if p.type != 'row' %}
+#_{{ p.id }} {
+    grid-column: {{ p.col_pos }}/{{ p.col_pos + p.col_width }};
+}
+    {% endif %}
+{% endfor %}
